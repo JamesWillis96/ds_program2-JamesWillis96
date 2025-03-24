@@ -172,11 +172,11 @@ class RedBlackTree {
         inOrderHelper(root);
     }
 
-    int getSize() {
+    int getSize() const { 
         return size;
     }
 
-    bool isEmpty() {
+    bool isEmpty() const { 
         return size == 0;
     }
 };

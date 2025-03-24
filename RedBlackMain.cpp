@@ -1,10 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "timer.h"
-#include "BinaryTree.h"  // Include the updated BinarySearchTree header
+#include "RedBlackTree.h"  // Include the RedBlackTree header
 
 using namespace std;
+
+// Constants for maximum word length and alphabet size
+const int MAX_WORD_LENGTH = 25;
+const int ALPHABET_SIZE = 26;
 
 // Function to clean and sanitize words
 string cleanWord(string word) {
@@ -17,8 +22,26 @@ string cleanWord(string word) {
     return cleaned; // Return the cleaned word
 }
 
+// Function to get the index for the first character
+int getCharIndex(char c) {
+    return tolower(c) - 'a';
+}
+
+// Function to get the total size of the dictionary
+int getTotalSize(const vector<vector<RedBlackTree<string>>> &dictionary) {
+    int totalSize = 0;
+    for (const auto &treesByLength : dictionary) {
+        for (const auto &tree : treesByLength) {
+            totalSize += tree.getSize();
+        }
+    }
+    return totalSize;
+}
+
 int main() {
-    BinarySearchTree<string> dictionary; // Use BST instead of IndexedDictionary
+    // 2D array of Red-Black Trees
+    vector<vector<RedBlackTree<string>>> dictionary(ALPHABET_SIZE, vector<RedBlackTree<string>>(MAX_WORD_LENGTH + 1));
+    
     ifstream dictFile("dict.txt");       // Open dictionary file
     ifstream bookFile("book.txt");       // Open book file
 
@@ -40,8 +63,10 @@ int main() {
     // Read and insert dictionary words
     while (dictFile >> word) {
         word = cleanWord(word);
-        if (!word.empty()) {
-            dictionary.insert(word);
+        if (!word.empty() && word.length() <= MAX_WORD_LENGTH && isalpha(word[0])) {
+            int charIndex = getCharIndex(word[0]);
+            int lengthIndex = word.length();
+            dictionary[charIndex][lengthIndex].insert(word);
         }
     }
     dictFile.close();
@@ -68,8 +93,18 @@ int main() {
         }
 
         compare = 0; // Reset comparison counter
+        
+        if (word.length() > MAX_WORD_LENGTH) {
+            incorrectWords++;
+            incorrectCompares += compare;
+            misspelledFile << word << endl;
+            continue;
+        }
 
-        if (dictionary.find(word, compare) != nullptr) {
+        int charIndex = getCharIndex(word[0]);
+        int lengthIndex = word.length();
+
+        if (dictionary[charIndex][lengthIndex].find(word, compare) != nullptr) {
             correctWords++;
             correctCompares += compare;
         } else {
@@ -85,7 +120,7 @@ int main() {
     double elapsedTime = Watch.Time();
 
     // Print results
-    cout << "dictionary size: " << dictionary.getSize() << endl;
+    cout << "dictionary size: " << getTotalSize(dictionary) << endl;
     cout << "Done checking and these are the results" << endl;
     cout << "finished in time: " << elapsedTime << " seconds" << endl;
     cout << "There are " << correctWords << " words found in the dictionary" << endl;
