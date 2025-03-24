@@ -3,12 +3,21 @@
 #include <string>
 #include <vector>
 #include "timer.h"
-#include "BinarySearchTree.h"  // Include the RedBlackTree header
+#include "BinarySearchTree.h" 
 
 using namespace std;
 
+/*__  __      _                  _   _     
+U|' \/ '|uU  /"\  u     ___     | \ |"|    
+\| |\/| |/ \/ _ \/     |_"_|   <|  \| |>   
+ | |  | |  / ___ \      | |    U| |\  |u   
+ |_|  |_| /_/   \_\   U/| |\u   |_| \_|    
+<<,-,,-.   \\    >>.-,_|___|_,-.||   \\,-. 
+ (./  \.) (__)  (__)\_)-' '-(_/ (_")  (_/  
+*/
+
 // Constants for maximum word length and alphabet size
-const int MAX_WORD_LENGTH = 100;
+const int MAX_WORD_LENGTH = 30; // Longest word is antidisestablishmentarianism (28 letters)
 const int ALPHABET_SIZE = 26;
 
 // Function to clean 
@@ -75,7 +84,7 @@ int main() {
     Watch.Start(); // Start timing spell checking
 
     int correctWords = 0;
-    int incorrectWords = 0;
+    int incorrectWords = 0;00;
     int skippedWords = 0;
     long long int correctCompares = 0;
     long long int incorrectCompares = 0;
@@ -94,6 +103,7 @@ int main() {
 
         compare = 0; // Reset comparison counter
         
+        // Check if the word is too long (There should not be any in this book)
         if (word.length() > MAX_WORD_LENGTH) {
             incorrectWords++;
             incorrectCompares += compare;
@@ -101,9 +111,11 @@ int main() {
             continue;
         }
 
+        //Get the indexes of the word
         int charIndex = getCharIndex(word[0]);
         int lengthIndex = word.length();
 
+        // Check if the word exists in the dictionary
         if (dictionary[charIndex][lengthIndex].find(word, compare) != nullptr) {
             correctWords++;
             correctCompares += compare;
