@@ -6,6 +6,7 @@ using namespace std;
 
 enum Color { RED, BLACK };
 
+//Node Structure for RedBlack Tree
 template <class T>
 class RedBlackNode {
   public:
@@ -18,9 +19,12 @@ class RedBlackNode {
     RedBlackNode(T value) : data(value), color(RED), left(nullptr), right(nullptr), parent(nullptr) {}
 };
 
+//RedBlackTree Class
 template <class T>
 class RedBlackTree {
   private:
+
+  //private members
     RedBlackNode<T>* root;
     int size;
 
@@ -39,7 +43,7 @@ class RedBlackTree {
         pt_right->left = pt;
         pt->parent = pt_right;
     }
-
+    // Rotate the subtree rooted at pt to the right
     void rightRotate(RedBlackNode<T>*& root, RedBlackNode<T>*& pt) {
         RedBlackNode<T>* pt_left = pt->left;
         pt->left = pt_left->right;
@@ -55,7 +59,7 @@ class RedBlackTree {
         pt_left->right = pt;
         pt->parent = pt_left;
     }
-
+    // Fix the Red-Black Tree properties after insertion
     void insertFixUp(RedBlackNode<T>*& root, RedBlackNode<T>*& pt) {
         RedBlackNode<T>* parent_pt = nullptr;
         RedBlackNode<T>* grand_parent_pt = nullptr;
@@ -65,6 +69,7 @@ class RedBlackTree {
             grand_parent_pt = pt->parent->parent;
 
             if (parent_pt == grand_parent_pt->left) {
+                // If the parent is a left child 
                 RedBlackNode<T>* uncle_pt = grand_parent_pt->right;
                 if (uncle_pt != nullptr && uncle_pt->color == RED) {
                     grand_parent_pt->color = RED;
@@ -82,6 +87,7 @@ class RedBlackTree {
                     pt = parent_pt;
                 }
             } else {
+                // If the parent is a right child
                 RedBlackNode<T>* uncle_pt = grand_parent_pt->left;
                 if (uncle_pt != nullptr && uncle_pt->color == RED) {
                     grand_parent_pt->color = RED;
@@ -102,7 +108,7 @@ class RedBlackTree {
         }
         root->color = BLACK;
     }
-
+    // Insert a new node in the BST manner and return the root
     RedBlackNode<T>* insertBST(RedBlackNode<T>*& root, RedBlackNode<T>*& pt) {
         if (root == nullptr)
             return pt;
@@ -117,7 +123,7 @@ class RedBlackTree {
 
         return root;
     }
-
+    // In-order traversal to print the tree
     void inOrderHelper(RedBlackNode<T>* root) {
         if (root == nullptr)
             return;
@@ -127,6 +133,7 @@ class RedBlackTree {
         inOrderHelper(root->right);
     }
 
+    // Helper function to find a node with the given data
     RedBlackNode<T>* findHelper(RedBlackNode<T>* root, T data, long long int &compare) {
         compare++;
         if (root == nullptr || root->data == data)
@@ -139,7 +146,7 @@ class RedBlackTree {
 
         return findHelper(root->right, data, compare);
     }
-
+    // Helper function to clear the tree
     void clearHelper(RedBlackNode<T>*& node) {
         if (node == nullptr)
             return;
@@ -149,6 +156,7 @@ class RedBlackTree {
         delete node;
         node = nullptr;
     }
+    //end of private members
 
   public:
     RedBlackTree() : root(nullptr), size(0) {}

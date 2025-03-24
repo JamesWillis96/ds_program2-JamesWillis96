@@ -3,15 +3,15 @@
 #include <string>
 #include <vector>
 #include "timer.h"
-#include "BinarySeachTree.h"  // Include the RedBlackTree header
+#include "BinarySearchTree.h"  // Include the RedBlackTree header
 
 using namespace std;
 
 // Constants for maximum word length and alphabet size
-const int MAX_WORD_LENGTH = 25;
+const int MAX_WORD_LENGTH = 100;
 const int ALPHABET_SIZE = 26;
 
-// Function to clean and sanitize words
+// Function to clean 
 string cleanWord(string word) {
     string cleaned = "";
     for (char c : word) {
